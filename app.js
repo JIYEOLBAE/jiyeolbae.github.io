@@ -43,14 +43,44 @@ const comic=document.getElementById('comicDialog');
 document.getElementById('comicOpen').addEventListener('click',()=>comic.showModal());
 document.getElementById('comicClose').addEventListener('click',()=>comic.close());
 comic.addEventListener('click',e=>{if(e.target===comic)comic.close();});
+const futureComic=document.getElementById('futureComicDialog');
+const futureComicOpen=document.getElementById('futureComicOpen');
+const futureComicPreview=document.getElementById('futureComicPreview');
+const futureComicClose=document.getElementById('futureComicClose');
+if(futureComicOpen)futureComicOpen.addEventListener('click',()=>futureComic.showModal());
+if(futureComicPreview)futureComicPreview.addEventListener('click',()=>futureComic.showModal());
+if(futureComicClose)futureComicClose.addEventListener('click',()=>futureComic.close());
+if(futureComic)futureComic.addEventListener('click',e=>{if(e.target===futureComic)futureComic.close();});
 // Portrait hover: gentle movement of the existing image; the face pixels do not change.
 const hero=document.getElementById('heroArea');
 const portraitButton=document.getElementById('portraitButton');
 const allowParallax=matchMedia('(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)');
 let raf=0;
-hero.addEventListener('pointermove',e=>{if(!allowParallax.matches)return;cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{const rect=hero.getBoundingClientRect();const x=(e.clientX-rect.left)/rect.width-.5;const y=(e.clientY-rect.top)/rect.height-.5;hero.style.setProperty('--hx',Math.max(-8,Math.min(8,x*14))+'px');hero.style.setProperty('--hy',Math.max(-6,Math.min(6,y*10))+'px');hero.style.setProperty('--gx',(-x*13)+'px');hero.style.setProperty('--gy',(-y*8)+'px');});});
-hero.addEventListener('pointerleave',()=>{hero.style.setProperty('--hx','0px');hero.style.setProperty('--hy','0px');hero.style.setProperty('--gx','0px');hero.style.setProperty('--gy','0px');});
-portraitButton.addEventListener('click',()=>{switchPanel('story',false);document.getElementById('discover').scrollIntoView({behavior:'smooth',block:'start'});});
+hero.addEventListener('pointermove',e=>{
+  if(!allowParallax.matches)return;
+  cancelAnimationFrame(raf);
+  raf=requestAnimationFrame(()=>{
+    const rect=hero.getBoundingClientRect();
+    const x=(e.clientX-rect.left)/rect.width-.5;
+    const y=(e.clientY-rect.top)/rect.height-.5;
+    hero.style.setProperty('--hx',Math.max(-18,Math.min(18,x*28))+'px');
+    hero.style.setProperty('--hy',Math.max(-14,Math.min(14,y*22))+'px');
+    hero.style.setProperty('--gx',(-x*20)+'px');
+    hero.style.setProperty('--gy',(-y*16)+'px');
+    hero.style.setProperty('--tiltX',`${Math.max(-4,Math.min(4,-y*7))}deg`);
+    hero.style.setProperty('--tiltY',`${Math.max(-5,Math.min(5,x*8))}deg`);
+    hero.style.setProperty('--sx',`${50 + x*25}%`);
+    hero.style.setProperty('--sy',`${50 + y*22}%`);
+  });
+});
+hero.addEventListener('pointerleave',()=>{
+  ['--hx','--hy','--gx','--gy'].forEach(v=>hero.style.setProperty(v,'0px'));
+  hero.style.setProperty('--tiltX','0deg');
+  hero.style.setProperty('--tiltY','0deg');
+  hero.style.setProperty('--sx','50%');
+  hero.style.setProperty('--sy','50%');
+});
+portraitButton.addEventListener('click',()=>{document.getElementById('discover').scrollIntoView({behavior:'smooth',block:'start'});});
 // Contact does not collect or store any data in this static website.
 // The Google Form itself handles validation, consent and private Sheet persistence.
 const contactButton=document.getElementById('contactButton');
