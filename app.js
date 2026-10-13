@@ -1,3 +1,4 @@
+
 "use strict";
 // Before activating submissions: replace the empty value below with the published
 // responder URL copied from your Google Form, NOT the private Google Sheet URL.
@@ -96,3 +97,50 @@ contactButton.addEventListener('click',()=>{if(validForm())window.open(FORM_URL,
 if('IntersectionObserver' in window&&!matchMedia('(prefers-reduced-motion:reduce)').matches){document.documentElement.classList.add('has-js');const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('in-view');observer.unobserve(entry.target);}})},{threshold:.09});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));}
 document.getElementById('year').textContent=new Date().getFullYear();
 setLanguage('ko');
+
+
+
+// V4.2 Personal interests + road trip photo journal.
+const interestsV42={
+ travel:{eyebrow:'THE ROAD LESS ORDINARY',title:'The Journey Matters.',ko:'미국 주재원 시절, 캘리포니아 얼바인에서 러시모어산까지 자동차로 여행했습니다. 가장 오래 기억에 남은 것은 목적지보다 길에서 만난 끝없는 풍경과 광활한 자연이었습니다.',en:'During my U.S. assignment, I drove from Irvine, California, to Mount Rushmore. What stayed with me most was not the destination but the endless landscapes and vastness of nature along the way.',tags:['ROAD TRIP','NATURE','EXPLORATION'],photo:true},
+ taste:{eyebrow:'STYLE & TASTE',title:'A Taste for Discovery.',ko:'남성 패션과 새로운 음식, 트렌디한 공간을 좋아합니다. 동네 카페를 찾아 사진을 모으고 맛있는 커피를 리스트로 정리합니다. 가족과 다시 가고 싶은 곳을 기억하고 언젠가 기록을 공유하고 싶습니다. 간단한 요리도 즐깁니다.',en:'I enjoy menswear, good food and discovering interesting places. I photograph neighborhood cafés, keep a list of coffees worth revisiting with family, and hope to share these notes someday. I also enjoy simple cooking.',tags:['MENSWEAR','LOCAL CAFÉS','FOOD & COOKING'],photo:false},
+ ideas:{eyebrow:'CURIOSITY & WRITING',title:'Curiosity, Put into Words.',ko:'역사·철학·과학을 좋아하는 이유는 새로운 사실과 다른 사람의 생각을 만날 수 있기 때문입니다. 사회현상, 사업 아이디어, 여행과 맛집에 관해 블로그 글을 100편 넘게 쓴 경험이 있습니다. 이 기록을 통해 주변의 경험을 더 깊게 바라보게 됐습니다.',en:'History, philosophy and science bring me new facts and different ways of thinking. I have written more than 100 blog posts about social trends, business ideas, travel and food, exploring the world from different angles.',tags:['HISTORY','PHILOSOPHY','SCIENCE','100+ POSTS'],photo:false},
+ people:{eyebrow:'PEOPLE & ENERGY',title:'Good People. Great Conversations.',ko:'모임 장소를 정하고 사람들을 만나 유쾌하게 대화하며 아이디어를 교환하는 것을 즐깁니다. 영화와 음악, 해외축구·한국야구·PBA 당구 경기를 즐겨 보고, 등산과 매일 한 시간 야외운동으로 에너지를 채웁니다.',en:'I enjoy bringing people together, choosing places to meet, sharing laughs and exchanging ideas. Movies, music, football, Korean baseball and professional billiards inspire me; hiking and an hour outdoors each day keep me moving.',tags:['CONVERSATION','SPORTS','MUSIC & FILM','DAILY MOVEMENT'],photo:false}
+};
+const travelPhotosV42=[
+ {src:'assets/roadtrip-01.webp',ko:'수증기가 흐르는 자연 지형 · 직접 촬영',en:'Mist across the landscape · original photo'},
+ {src:'assets/roadtrip-02.webp',ko:'협곡과 폭포 · 직접 촬영',en:'Canyon and waterfall · original photo'},
+ {src:'assets/roadtrip-03.webp',ko:'러시모어산 · 직접 촬영',en:'Mount Rushmore · original photo'},
+ {src:'assets/roadtrip-04.webp',ko:'광활한 사막 풍경 · 직접 촬영',en:'Open desert landscape · original photo'}
+];
+let interestNameV42='travel',photoIndexV42=3;
+const interestView=document.getElementById('interest-view-v42');
+function renderInterestV42(){
+ const t=interestsV42[interestNameV42];
+ document.getElementById('interest-eyebrow').textContent=t.eyebrow;
+ document.getElementById('interest-title').textContent=t.title;
+ document.getElementById('interest-body').textContent=t[lang];
+ document.getElementById('interest-tags').replaceChildren(...t.tags.map(str=>{const a=document.createElement('span');a.textContent=str;return a;}));
+ document.getElementById('roadtrip-gallery-v42').hidden=!t.photo;
+ interestView.classList.toggle('no-photo-v42',!t.photo);
+ document.querySelectorAll('.interest-card-v42').forEach(card=>{const isSelected=card.dataset.interest===interestNameV42;card.classList.toggle('is-active',isSelected);card.setAttribute('aria-pressed',String(isSelected));});
+ if(t.photo)renderPhotoV42();
+}
+function renderPhotoV42(){
+ const p=travelPhotosV42[photoIndexV42];
+ const img=document.getElementById('gallery-main-image-v42');img.src=p.src;img.alt=p[lang];
+ document.getElementById('gallery-caption-v42').textContent=p[lang];
+ document.getElementById('gallery-counter-v42').textContent=String(photoIndexV42+1).padStart(2,'0')+' / 04';
+ document.querySelectorAll('.photo-thumb-v42').forEach((button,i)=>{button.classList.toggle('active',i===photoIndexV42);button.setAttribute('aria-pressed',String(i===photoIndexV42));});
+}
+document.querySelectorAll('.interest-card-v42').forEach(card=>card.addEventListener('click',()=>{interestNameV42=card.dataset.interest;renderInterestV42();}));
+document.querySelectorAll('.photo-thumb-v42').forEach(card=>card.addEventListener('click',()=>{photoIndexV42=Number(card.dataset.photoIndex);renderPhotoV42();}));
+document.getElementById('galleryPrevV42').addEventListener('click',()=>{photoIndexV42=(photoIndexV42+3)%4;renderPhotoV42();});
+document.getElementById('galleryNextV42').addEventListener('click',()=>{photoIndexV42=(photoIndexV42+1)%4;renderPhotoV42();});
+const photoDialogV42=document.getElementById('photoDialogV42');
+document.getElementById('photoZoomV42').addEventListener('click',()=>{document.getElementById('photoDialogImageV42').src=travelPhotosV42[photoIndexV42].src;document.getElementById('photoDialogCaptionV42').textContent=travelPhotosV42[photoIndexV42][lang];photoDialogV42.showModal();});
+document.getElementById('photoDialogCloseV42').addEventListener('click',()=>photoDialogV42.close());
+photoDialogV42.addEventListener('click',e=>{if(e.target===photoDialogV42)photoDialogV42.close();});
+// Follow the existing language toggle after it updates, without changing its behavior.
+document.getElementById('languageButton').addEventListener('click',()=>{renderInterestV42();});
+renderInterestV42();
